@@ -1,0 +1,6 @@
+github.com/basebytes/scheduler v0.0.3 h1:8Xk4QSlKK3VBXVd11cwunqUCpibAOHmiU0mI6+sL54c=
+github.com/basebytes/scheduler v0.0.3/go.mod h1:sz7JCJmv5ZV2mZSWcCwjxn/7WBdlmuJN0Ae5bPJb6OY=
+github.com/basebytes/types v0.0.7 h1:RkVG6YmhFPvNscFrfIQjvUfcBB2vBooF61lch+MGVRQ=
+github.com/basebytes/types v0.0.7/go.mod h1:/5Jg+RzvHZEamnslAOE9gVxMXzSRa20PTKOmgGVTXAo=
+github.com/robfig/cron/v3 v3.0.1 h1:WdRxkvbJztn8LMz/QEvLN5sBU+xKpSqwwUO1Pjr4qDs=
+github.com/robfig/cron/v3 v3.0.1/go.mod h1:eQICP3HwyT7UooqI/z+Ov+PtYAWygg1TEWWzGIFLtro=
