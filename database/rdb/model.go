@@ -138,7 +138,7 @@ func (ins *Instance) FindFirstByCondition(table Data) *gorm.DB {
 }
 
 func (ins *Instance) GetData(table Data, result any, conditions ...Condition) *gorm.DB {
-	return ins.DB().Model(table).Where(table).Scopes(conditions...).Find(result)
+	return ins.DB().Debug().Model(table).Where(table).Scopes(conditions...).Find(result)
 }
 
 func (ins *Instance) SubQuery(table Data, conditions ...Condition) *gorm.DB {
@@ -157,6 +157,17 @@ func (ins *Instance) Count(table Data, condition ...Condition) (count int64, err
 func (ins *Instance) PageQuery(table Data, result any, page Condition, conditions ...Condition) (count int64, err error) {
 	err = ins.DB().Model(table).Where(table).Scopes(conditions...).Count(&count).Scopes(page).Find(result).Error
 	return
+}
+
+func (ins *Instance) BatchUpdatesNotEmpty(table []Data) (err error) {
+	tx := ins.DB().Begin()
+	for _, t := range table {
+		if err = tx.Updates(t).First(t).Error; err != nil {
+			tx.Rollback()
+			return
+		}
+	}
+	return tx.Commit().Error
 }
 
 func (ins *Instance) Raw(sql string, args ...any) *gorm.DB {
