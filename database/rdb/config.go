@@ -32,20 +32,6 @@ func (c *Config) Init() (err error) {
 	return
 }
 
-func (c *Config) initSqlite() (err error) {
-	if _, err = os.Stat(c.DataBase); err == nil {
-		err = fmt.Errorf("sqlite db file %s not found", c.DataBase)
-	} else {
-		if c.MaxOpenCons <= 0 {
-			c.MaxOpenCons = defaultSqliteMaxOpenCons
-		}
-		if c.MaxIdleCons <= 0 {
-			c.MaxIdleCons = defaultSqliteMaxIdleCons
-		}
-	}
-	return
-}
-
 func (c *Config) Dial() (dial gorm.Dialector) {
 	switch c.Driver {
 	case "", driverMysql:
@@ -65,6 +51,20 @@ func (c *Config) initMysql() (err error) {
 	}
 	if c.Port <= 0 {
 		c.Port = defaultMysqlPort
+	}
+	return
+}
+
+func (c *Config) initSqlite() (err error) {
+	if _, err = os.Stat(c.DataBase); err == nil {
+		err = fmt.Errorf("sqlite db file %s not found", c.DataBase)
+	} else {
+		if c.MaxOpenCons <= 0 {
+			c.MaxOpenCons = defaultSqliteMaxOpenCons
+		}
+		if c.MaxIdleCons <= 0 {
+			c.MaxIdleCons = defaultSqliteMaxIdleCons
+		}
 	}
 	return
 }

@@ -55,20 +55,20 @@ func (ins *Instance) DisableDebug() {
 	ins.debug.Store(false)
 }
 
-func (ins *Instance) DB() *gorm.DB {
+func (ins *Instance) DB() (db *gorm.DB) {
+	db = ins.db
 	if ins.debug.Load() {
-		return ins.db.Debug()
-	} else {
-		return ins.db
+		db = db.Debug()
 	}
+	return
 }
 
 func (ins *Instance) Create(table any) *gorm.DB {
 	return ins.DB().Create(table)
 }
 
-func (ins *Instance) FirstOrCreate(data Data, condition ...Condition) *gorm.DB {
-	return ins.DB().Model(data).Scopes(condition...).FirstOrCreate(data)
+func (ins *Instance) CreateOnConflict(data Data, onConflict clause.OnConflict) *gorm.DB {
+	return ins.DB().Clauses(onConflict).Create(data)
 }
 
 func (ins *Instance) CreateIgnoreConflicts(conflicts []string, values any) *gorm.DB {
@@ -82,24 +82,20 @@ func (ins *Instance) CreateIgnoreConflicts(conflicts []string, values any) *gorm
 	}).Create(values)
 }
 
-func (ins *Instance) AssociationUpdatesNotEmpty(table Data, name string, values []Data) error {
-	v := make([]any, 0, len(values))
-	for _, value := range values {
-		v = append(v, value)
-	}
-	return ins.DB().Model(table).Updates(table).Association(name).Append(v...)
+func (ins *Instance) FirstOrCreate(data Data, condition ...Condition) *gorm.DB {
+	return ins.DB().Model(data).Scopes(condition...).FirstOrCreate(data)
 }
 
 func (ins *Instance) UpdatesNotEmpty(table Data) *gorm.DB {
 	return ins.DB().Updates(table).First(table)
 }
 
-func (ins *Instance) UpdatesWithCondition(table Data, values any, condition ...Condition) *gorm.DB {
-	return ins.DB().Model(table).Scopes(condition...).Updates(values)
-}
-
 func (ins *Instance) UpdatesByCondition(table Data, condition ...Condition) *gorm.DB {
 	return ins.DB().Model(table).Scopes(condition...).Updates(table)
+}
+
+func (ins *Instance) UpdatesWithCondition(table Data, values any, condition ...Condition) *gorm.DB {
+	return ins.DB().Model(table).Scopes(condition...).Updates(values).Find(table)
 }
 
 func (ins *Instance) UpdateColumn(table Data, column string, value any) *gorm.DB {
@@ -112,6 +108,18 @@ func (ins *Instance) UpdateColumns(table Data, values any) *gorm.DB {
 
 func (ins *Instance) UpdateColumnsById(table Data, columns ...string) *gorm.DB {
 	return ins.DB().Model(table).Select(columns).Updates(table)
+}
+
+func (ins *Instance) UpdateValues(table Data, values any, condition ...Condition) *gorm.DB {
+	return ins.DB().Model(table).Scopes(condition...).Updates(values)
+}
+
+func (ins *Instance) AssociationUpdatesNotEmpty(table Data, name string, values []Data) error {
+	v := make([]any, 0, len(values))
+	for _, value := range values {
+		v = append(v, value)
+	}
+	return ins.DB().Model(table).Updates(table).Association(name).Append(v...)
 }
 
 func (ins *Instance) Upsert(conflicts, updates []string, values any) *gorm.DB {
@@ -137,8 +145,12 @@ func (ins *Instance) FindFirstByCondition(table Data) *gorm.DB {
 	return ins.DB().Where(table).First(table)
 }
 
+func (ins *Instance) First(table Data) *gorm.DB {
+	return ins.DB().First(table)
+}
+
 func (ins *Instance) GetData(table Data, result any, conditions ...Condition) *gorm.DB {
-	return ins.DB().Debug().Model(table).Where(table).Scopes(conditions...).Find(result)
+	return ins.DB().Model(table).Where(table).Scopes(conditions...).Find(result)
 }
 
 func (ins *Instance) SubQuery(table Data, conditions ...Condition) *gorm.DB {
@@ -159,6 +171,11 @@ func (ins *Instance) PageQuery(table Data, result any, page Condition, condition
 	return
 }
 
+func (ins *Instance) SelectPageQuery(table Data, result any, page, selected Condition, conditions ...Condition) (count int64, err error) {
+	err = ins.DB().Model(table).Where(table).Scopes(conditions...).Count(&count).Scopes(selected, page).Find(result).Error
+	return
+}
+
 func (ins *Instance) BatchUpdatesNotEmpty(table []Data) (err error) {
 	tx := ins.DB().Begin()
 	for _, t := range table {
@@ -170,12 +187,27 @@ func (ins *Instance) BatchUpdatesNotEmpty(table []Data) (err error) {
 	return tx.Commit().Error
 }
 
+func (ins *Instance) Transaction(fc func(tx *gorm.DB) error) error {
+	return ins.DB().Transaction(fc)
+}
+
 func (ins *Instance) Raw(sql string, args ...any) *gorm.DB {
 	return ins.DB().Raw(sql, args...)
 }
 
-func (ins *Instance) Transaction(fc func(tx *gorm.DB) error) error {
-	return ins.DB().Transaction(fc)
+func (ins *Instance) RawAny(sql string, result any, args ...any) (int64, error) {
+	res := ins.DB().Raw(sql, args...).Find(result)
+	return res.RowsAffected, res.Error
+}
+
+func (ins *Instance) Exec(sql string, args ...any) *gorm.DB {
+	return ins.DB().Exec(sql, args...)
+}
+
+func (ins *Instance) ToSql(table string, conditions ...Condition) string {
+	return ins.DB().ToSQL(func(tx *gorm.DB) *gorm.DB {
+		return tx.Table(table).Scopes(conditions...).Find(nil)
+	})
 }
 
 func (ins *Instance) OrClause(condition ...Condition) *gorm.DB {
@@ -194,8 +226,11 @@ func newDryRun() *gorm.DB {
 }
 
 type Condition = func(db *gorm.DB) *gorm.DB
+
 type OrderType = string
+
 type OpType = string
+
 type FuzzyType int8
 
 const (
