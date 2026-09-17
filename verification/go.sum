@@ -1,0 +1,8 @@
+github.com/basebytes/expireMap v0.0.2 h1:EHDiskMsA8dJPRtJsHxEMJfaOM4Y20eXUFBtnE8orTE=
+github.com/basebytes/expireMap v0.0.2/go.mod h1:8jlCHyVXIjW1J2caihLd1x7OxJut+kcfMad/m65Lgek=
+github.com/basebytes/tools v0.0.5 h1:gvHfB80hQMN0ru9WJiIo3fLr+8796xnWhbPb7I3cDw0=
+github.com/basebytes/tools v0.0.5/go.mod h1:hgP4xLEztOwV4/LajAK85a5YjSrp3Qxr6aEzRoS6Tf0=
+github.com/basebytes/types v0.0.7 h1:RkVG6YmhFPvNscFrfIQjvUfcBB2vBooF61lch+MGVRQ=
+github.com/basebytes/types v0.0.7/go.mod h1:/5Jg+RzvHZEamnslAOE9gVxMXzSRa20PTKOmgGVTXAo=
+github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646 h1:zYyBkD/k9seD2A7fsi6Oo2LfFZAehjjQMERAvZLEDnQ=
+github.com/nfnt/resize v0.0.0-20180221191011-83c6a9932646/go.mod h1:jpp1/29i3P1S/RLdc7JQKbRpFeM1dOBd8T9ki5s+AY8=
