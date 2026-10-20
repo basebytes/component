@@ -1,12 +1,12 @@
 module github.com/basebytes/component/dict
 
 require (
-	github.com/basebytes/component/database v0.0.3
-	github.com/basebytes/tools v0.0.3
-	github.com/basebytes/types v0.0.7
+	github.com/basebytes/component/database v0.0.4
+	github.com/basebytes/tools v0.0.5
 )
 
 require (
+	github.com/basebytes/types v0.0.7 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/glebarez/go-sqlite v1.21.2 // indirect
 	github.com/glebarez/sqlite v1.10.0 // indirect
