@@ -1,7 +1,7 @@
 module github.com/basebytes/component/server_config
 
 require (
-	github.com/basebytes/component/database v0.0.3
+	github.com/basebytes/component/database v0.0.4
 	github.com/basebytes/config-manager-go/config v0.0.2
 	github.com/basebytes/types v0.0.7
 	github.com/mitchellh/mapstructure v1.5.0

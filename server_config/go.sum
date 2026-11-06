@@ -40,6 +40,8 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/basebytes/component/database v0.0.2 h1:jZ90yCXDDKu+vPNk4ujajVtIoktWaguxY2xtIznK07g=
 github.com/basebytes/component/database v0.0.2/go.mod h1:uaaCS456v4uPGuEGvCesx0ugjrEHle+AIfs0+d5qm/U=
+github.com/basebytes/component/database v0.0.3/go.mod h1:uaaCS456v4uPGuEGvCesx0ugjrEHle+AIfs0+d5qm/U=
+github.com/basebytes/component/database v0.0.4/go.mod h1:uaaCS456v4uPGuEGvCesx0ugjrEHle+AIfs0+d5qm/U=
 github.com/basebytes/config-manager-go/config v0.0.2 h1:xn4dDbW90+Kn4eI24tUdf/rNa5EEbEEWLUu1RR65XlQ=
 github.com/basebytes/config-manager-go/config v0.0.2/go.mod h1:t+qEEcCe1XxySIRIoAq4ZQ+d5f7dBGdbwh0SSCZP0p0=
 github.com/basebytes/types v0.0.7 h1:RkVG6YmhFPvNscFrfIQjvUfcBB2vBooF61lch+MGVRQ=

@@ -6,14 +6,14 @@ import (
 	"fmt"
 
 	"github.com/basebytes/component/database/rdb"
+
 	"github.com/basebytes/config-manager-go/config"
 )
 
-type serverConfig struct {
-	ServerName  string      `json:"serverName,omitempty"`
-	StartUp     string      `json:"startUp,omitempty"`
-	TablePrefix string      `json:"tablePrefix,omitempty"`
-	FromDB      *rdb.Config `json:"fromDB,omitempty"`
+type ServerConfig struct {
+	ServerName string      `json:"serverName,omitempty"`
+	StartUp    string      `json:"startUp,omitempty"`
+	FromDB     *rdb.Config `json:"fromDB,omitempty"`
 }
 
 func Load(configPath string, cfg any, options ...config.Option) (fromDB *rdb.Config, err error) {
@@ -22,10 +22,12 @@ func Load(configPath string, cfg any, options ...config.Option) (fromDB *rdb.Con
 		loader     = newLoader(withDateTimeDecoder)
 		cfgManager = config.New(loader, configPath, options...)
 		ins        *rdb.Instance
-		serverCfg  = &serverConfig{}
+		serverCfg  = &ServerConfig{}
 	)
-	if err = cfgManager.ReadConfig(cfg); err == nil {
-		if serverCfg.FromDB != nil {
+	if err = cfgManager.ReadConfig(serverCfg); err == nil {
+		if serverCfg.FromDB == nil {
+			err = cfgManager.ReadConfig(cfg)
+		} else {
 			if err = serverCfg.FromDB.Init(); err != nil {
 				err = fmt.Errorf("init config db items failed:%s", err.Error())
 			} else if ins, err = rdb.NewInstance("", serverCfg.FromDB); err == nil {
